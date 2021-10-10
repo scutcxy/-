@@ -1,0 +1,49 @@
+#include<iostream>
+using namespace std;
+class Stack{
+public:
+	Stack() { top = base = NULL; length = 0; }
+
+	void set_size(int size) {
+		top=base = new int[size];
+		length = size;
+	}
+	void push(int data) {
+		if (top - base != length) {
+			*top++ = data;
+			
+		}
+		
+	}
+	void pop(int& data) {
+		if (top == base) {
+			cout << "error";
+		}
+		else {
+			data = *--top;
+		}
+	}
+
+private:
+	int* top, * base;
+	int length ;
+};
+unsigned long long m = 0;
+void move(int n, char A,char C) {
+	m++;
+	cout << n << "from" << A << "to" << C << endl;
+}
+void hanoi(int n, char A, char B, char C) {
+	if (n == 1) {
+		move(1, A, C);
+	}
+	else {
+		hanoi(n - 1, A, C, B);
+		move(n, A, C);
+		hanoi(n - 1, B, A, C);
+	}
+}
+int main() {
+	hanoi(64, 'A', 'B', 'C');
+	cout << m;
+}
