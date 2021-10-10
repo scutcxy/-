@@ -1,0 +1,177 @@
+#include<iostream>
+using namespace std;
+struct ListNode {
+	int data;
+	ListNode* node = NULL;
+};
+class list {
+public:
+	list() {
+		r=top = new ListNode;
+		top->node = NULL;
+	}
+	void insert(int temp) {
+		ListNode* temp1 = new ListNode;
+		temp1->data = temp;
+		r->node = temp1;
+		r = temp1;
+
+	}
+	void insert(ListNode* temp) {
+		r->node = temp;
+		r = temp;
+		r->node = NULL;
+	}
+	void show() {
+		if (!is_empty()) {
+			ListNode* temp = top->node;
+			while (temp) {
+				cout << temp->data;
+				temp = temp->node;
+			}
+		}
+		
+	}
+	ListNode* return_top() {
+		return top;
+	}
+	bool is_empty() {
+		return top == r;
+	}
+	void merge(list& l2,list&l3) {
+		auto pa = top->node, pb = l2.return_top()->node;
+		l3 = *this;
+		auto pc = l3.return_top();
+		while (pa && pb) {
+			if (pa->data < pb->data) {
+				pc->node = pa; pc = pa;
+				pa = pa->node;
+			}
+			else if (pa->data > pb->data) {
+				pc->node = pb;
+				pc = pb;
+				pb = pb->node;
+			}
+			else {
+				pc->node = pa; pc = pa;
+				pa = pa->node;
+				auto temp = pb;
+				pb = pb->node;
+				delete temp;
+			}
+		}
+		pc->node = pa ? pa : pb;
+		delete l2.return_top();
+	}
+	ListNode* find(int data) {
+		auto pa = top->node;
+		while (pa) {
+			if (pa->data == data) {
+				return pa;
+			}
+			else { pa = pa->node; }
+		}
+		return NULL;
+	}
+	void intersection(list& l2) {
+		auto pb = l2.return_top()->node;
+		while (pb) {
+			if (find(pb->data)) {
+				auto temp = pb;
+				pb = pb->node;
+				delete temp;
+			}
+			else {
+				auto temp = pb;
+				temp->node = NULL;
+				r->node = temp;
+				r = temp;
+				pb = pb->node;
+
+			}
+		}
+	}
+	int difference_set(list& l2) {
+		auto pa = top->node;
+		auto temp = top;
+		int i = 0;
+		while (pa) {
+			if(l2.find(pa->data)) {
+				temp->node = pa->node;
+				auto temp1 = pa;
+				pa = pa->node;
+				delete temp1;
+
+			}
+			else {
+				temp = pa;
+				pa = pa->node;
+				i++;
+			}
+			
+		}
+		return i;
+	}
+	void resolve(list& l2) {
+		auto pa = top->node;
+		auto temp = top;
+		while (pa) {
+			if (pa->data < 0) {
+				temp = pa;
+				pa = pa->node;
+			}
+			else {
+				temp->node = pa->node;
+				auto temp1 = pa;
+				pa = pa->node;
+				l2.insert(temp1);
+			}
+		}
+	}
+	ListNode* max() {
+		auto pa = top->node;
+		int max = INT_MIN;
+		ListNode* record = NULL;
+		while (pa) {
+			if (pa->data > max) {
+				max = pa->data;
+				record = pa;
+			}
+			pa = pa->node;
+		}
+		return record;
+	}
+	void reverse() {
+		auto pa = top->node; 
+		auto top_temp = top;
+		r = pa;
+		ListNode* a, * b;
+		a = b = NULL;
+		while (pa) {
+			
+			a = top_temp; b = pa;
+			top_temp = pa;
+			pa = pa->node;
+			b->node = a;
+			
+		}
+		r->node = NULL;
+		top->node = b;
+	}
+private:
+	ListNode* top, *r;
+};
+
+
+int main() {
+	list l1, l2, l3;
+	l1.insert(-1);
+	l1.insert(4);
+	l1.insert(3);
+	
+	l1.insert(-3);
+	
+	l1.reverse();
+	l1.show();
+	
+}
