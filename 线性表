@@ -161,7 +161,37 @@ public:
 private:
 	ListNode* top, *r;
 };
+int find_max(ListNode*f) {
+	
+	if (f->node==NULL) {
+		
+		return f->data;
 
+	}
+	else {
+		
+		int temp = find_max(f->node);
+		
+		return f->data >= temp ? f->data : temp;
+	}
+}
+int count(ListNode* f) {
+	
+	if (f->node == NULL) {
+		return 1;
+	}
+	else {
+		return count(f->node) + 1;
+	}
+}
+int average(ListNode* f) {
+	if (f->node == NULL) {
+		return f->data;
+	}
+	else {
+		return f->data + average(f->node);
+	}
+}
 
 int main() {
 	list l1, l2, l3;
