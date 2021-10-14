@@ -1,0 +1,108 @@
+#include<iostream>
+#include<string>
+using namespace std;
+template<class T>
+class Stack{
+public:
+	Stack() {
+		top = base = new T[100];
+		length = 100;
+	}
+
+	
+	void push(T data) {
+		if (top - base != length) {
+			*top++ = data;
+			
+		}
+		
+	}
+	void pop(T& data) {
+		if (top == base) {
+			cout << "error";
+		}
+		else {
+			data = *--top;
+		}
+	}
+	void pop() {
+		if (top == base) {
+			cout << "error";
+		}
+		else {
+			cout<< *--top;
+		}
+	}
+	bool  is_empty() {
+		return top == base;
+	}
+	void size() {
+		cout << top - base-1;
+	}
+	~Stack() {
+		delete[] base;
+		top = base = NULL;
+	}
+private:
+	T* top, * base;
+	int length ;
+};
+bool judge(string& s1) {
+	Stack<char> temp;
+	for (int i = 0; i < s1.size()/2; i++) {
+		
+		temp.push(s1[i]);
+	}
+	for (int i = s1.size() / 2 ; i < s1.size(); i++) {
+		
+		char temp2; temp.pop(temp2); 
+		if (temp2 == s1[i]) {
+			continue;
+		}
+		else {
+			return 0;
+		}
+	}
+	return 1;
+}
+struct node {
+	int data;
+	node* next = NULL;
+};
+class Link_Stack {
+public:
+	Link_Stack() {
+		r = new node;
+
+	}
+	void push(int data) {
+		node* temp = new node;
+		temp->data = data;
+		r->next = temp;
+		temp->next = r;
+		r = temp;
+	}
+	bool is_empty() {
+		return !r->next;
+	}
+	void pop() {
+		if (!is_empty()) {
+			node* temp = r->next->next;
+			r->next->next = r->next->next->next;
+			cout << temp->data << endl;
+			delete temp;
+		}
+	}
+private:
+	node *r;
+
+};
+int Ackermann(int m, int n) {
+	if (m == 0) {
+		return n + 1;
+	}
+	else if (n != 0 && n== 0) {
+		return Ackermann(m - 1, 1);
+	}
+	else { return Ackermann(m - 1, Ackermann(m, n - 1)); }
+}
