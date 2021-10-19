@@ -1,0 +1,64 @@
+void inorder(node* temp) {
+	if (temp == NULL) {
+		return;
+	}
+	Stack<node*>s1, s2;
+	auto q1 = new node, q2 = new node;
+	while (temp || !s1.is_empty()) {
+		if (temp) {
+			s1.push(temp);
+			s2.push(temp);
+			temp = temp->rchild;
+		}
+		else {
+			s1.pop(q1);	
+			
+			temp = q1->lchild;
+		}
+	}
+	while (!s2.is_empty()) {
+		s2.pop(q2);
+		cout << q2->data;
+	}
+		
+
+}
+void ceng_order(node* temp) {
+	Quene<node*> q1(100);
+	q1.push(temp);
+	while (!q1.is_empty()) {
+		q1.pop(temp);
+		cout << temp->data;
+		if (temp->lchild) { q1.push(temp->lchild); }
+		if (temp->rchild) { q1.push(temp->rchild); }
+
+	}
+		
+	
+}
+void create_tree(node* &temp) {
+	char a;
+	cin >> a;
+	if (a == '#') { temp = NULL; }
+	else {
+		temp = new node;
+		temp->data = a;
+		create_tree(temp->lchild);
+		create_tree(temp->rchild);
+	}
+}
+int tall(node* temp) {
+	if (temp==NULL) { return 0; }
+	else {
+		auto m = tall(temp->lchild);
+		auto n = tall(temp->rchild);
+		if (m > n) { return m + 1; }
+		else { return n + 1; }
+	}
+}
+int count(node* temp) {
+	if (temp == NULL) { return 0; }
+	else {
+		return count(temp->rchild) + count(temp->lchild)+1;
+	}
+}
