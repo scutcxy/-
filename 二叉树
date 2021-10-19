@@ -1,3 +1,7 @@
+struct node {
+	char data;
+	node* lchild = NULL, * rchild = NULL;
+};
 class BinTree {
 public:
 	BinTree() {
