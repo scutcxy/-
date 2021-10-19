@@ -1,0 +1,18 @@
+class BinTree {
+public:
+	BinTree() {
+		top = NULL;
+	}
+	bool is_empty() {
+		return top == NULL;
+	}
+	void preorder(node* temp) {
+		if (temp) {
+			cout << temp->data;
+			preorder(temp->lchild);
+			preorder(temp->rchild);
+		}
+	}
+private:
+	node* top;
+};
