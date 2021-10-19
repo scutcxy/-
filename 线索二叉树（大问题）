@@ -1,0 +1,177 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+struct node {
+	char data;
+	node* lchild = NULL, * rchild = NULL;
+	int ltag=0, rtag=0;
+};
+
+class clue_tree {
+public:
+	clue_tree() { top = NULL; }
+	
+	void show(node* temp){
+		if (temp) {
+			show(temp->lchild);
+			cout << temp->data;
+			show(temp->rchild);
+		}
+	}
+	bool is_empty() { return top == NULL; }
+	node*& return_top() { return top; }
+private:
+	node* top;
+};
+void create_tree(node* &temp ) {
+	char a;
+	cin >> a;
+	if (a == '#') { temp = NULL; }
+	else {
+		temp = new node;
+		temp->data = a;
+		create_tree(temp->lchild);
+		create_tree(temp->rchild);
+	}
+}
+void InThread(node*& p, node*& pre) {
+	if (p != NULL) {
+		InThread(p->lchild, pre);
+		if (p->lchild == NULL) {
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		if (pre!=NULL&&pre->rchild == NULL) {
+			pre->rchild = p;
+			pre->rtag = 1;
+		}
+		pre = p;
+		InThread(p->rchild, pre);
+	}
+
+}
+void create_inthread(clue_tree& t1) {
+	if (!t1.is_empty()) {
+		node* pre = NULL;
+		InThread(t1.return_top(), pre);
+		pre->rchild = NULL;
+		pre->rtag = 1;
+	}
+}
+node* firstlnode(node* p) {
+	while (p->ltag == 0) { p = p->lchild; }
+	return p;
+}
+node* firstrnode(node* p) {
+	while (p->rtag == 0) { p = p->rchild; }
+	return p;
+}
+node* nextnode(node* p) {
+	if (p->rtag == 0) { return firstlnode(p->rchild); }
+	else { return p->rchild; }
+}
+node* frontnode(node* p) {
+	if (p->ltag == 0) { return firstrnode(p->lchild); }
+	else { return p->lchild; }
+}
+void inshow_cluetree(clue_tree& t) {
+	for (auto it = firstlnode(t.return_top()); it != NULL; it = nextnode(it)) {
+		cout << it->data;
+	}
+}
+//后序未完善，需要三叉链表实现。只做了下面的PostThread且没检查
+//void PostThread(node*& p, node*& pre) {
+//	if (p != NULL) {
+//		PostThread(p->lchild, pre);
+//		if (p->lchild == NULL) {
+//			p->lchild = pre;
+//			p->ltag = 1;
+//		}
+//		pre = p;
+//		PostThread(p->rchild, pre);
+//		if (pre!=NULL&& pre->rchild == NULL) {
+//			pre->rchild = p;
+//			pre->rtag = 1;
+//		}
+//
+//
+//	}
+//
+//}
+
+//void create_postthread(clue_tree& t1) {
+//	if (!t1.is_empty()) {
+//		node* pre = NULL;
+//		PostThread(t1.return_top(), pre);
+//		
+//	}
+//}
+//node* postnextnode(node* p) {
+//	if (p->rtag == 0) { return firstlnode(p->rchild); }
+//	else { return p->rchild; }
+//}
+//node* postfrontnode(node* p) {
+//	if (p->ltag == 0) { return firstrnode(p->lchild); }
+//	else { return p->lchild; }
+//}
+//void inshow_cluetree(clue_tree& t) {
+//	for (auto it = firstlnode(t.return_top()); it != NULL; it = nextnode(it)) {
+//		cout << it->data;
+//	}
+//}
+
+void PreThread(node*& p, node*& pre) {
+	if (p != NULL) {
+		if (p->lchild == NULL) {
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		if (pre != NULL && pre->rchild == NULL) {
+			pre->rchild = p;
+			pre->rtag = 1;
+		}
+		pre = p;
+		if (p->lchild == 0) {
+			PreThread(p->lchild, pre);
+		}
+		
+		if (p->rchild == 0) {
+			PreThread(p->rchild, pre);
+		}
+		
+	}
+
+}
+
+void create_prethread(clue_tree& t1) {
+	if (!t1.is_empty()) {
+		node* pre = NULL;
+		PreThread(t1.return_top(), pre);
+		pre->rchild = NULL;
+		pre->rtag = 1;
+	}
+}
+node* prenextnode(node* p) {
+	if (p->ltag == 0) { return p->lchild; }
+	else if (p->ltag == 1 && p->rtag == 0) { return p->rchild; }
+	else { return p->rchild; }
+}
+node* prefrontnode(node* p) {
+	if (p->ltag == 0) { return firstrnode(p->lchild); }
+	else { return p->lchild; }
+}
+void preshow_cluetree(clue_tree& t) {
+	for (auto it =t.return_top(); it != NULL; it = prenextnode(it)) {
+		cout << it->data;
+	}
+}
+int main() {
+	clue_tree t1;
+
+	create_tree(t1.return_top());
+
+	create_prethread(t1);
+	preshow_cluetree(t1);
+	
+}
