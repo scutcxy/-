@@ -1,0 +1,47 @@
+template<class T>
+class Quene {
+public:
+	Quene(int a) {
+		arr= new T[a];
+		size=top = rear = 0;
+		capacity = a;
+	}
+	bool is_empty() {
+		return top == rear;
+	}
+	bool is_full() {
+		return size == capacity;
+	}
+	void push(T data) {
+		if (!is_full()) {
+			arr[rear] = data;
+			rear = (rear + 1) % capacity;
+			size++;
+		}
+		else {
+			cout << "error!";
+		}
+	}
+	void pop(T& data) {
+		if (!is_empty()) {
+			data = arr[top];
+			top = (top + 1) % capacity;
+		}
+		else {
+			cout << "error!";
+		}
+	}
+	void  pop() {
+		if (!is_empty()) {
+			cout<< arr[top];
+			
+			top = (top + 1) % capacity;
+			
+		}
+	}
+private:
+	int top, rear;
+	T* arr;
+	int capacity;
+	int size;
+};
