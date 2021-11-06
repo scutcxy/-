@@ -1,0 +1,198 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+struct node {
+	char data;
+	node* lchild = NULL, * rchild = NULL;
+};
+class BinTree {
+public:
+	BinTree() {
+		top = NULL;
+	}
+	bool is_empty() {
+		return top == NULL;
+	}
+	
+	node*& return_top() { return top; }
+private:
+	node* top;
+};
+void preorder(node* temp) {
+	if (temp) {
+		cout << temp->data;
+		preorder(temp->lchild);
+		preorder(temp->rchild);
+	}
+}
+void create_tree(node*& temp) {
+	char a;
+	cin >> a;
+	if (a == '#') { temp = NULL; }
+	else {
+		temp = new node;
+		temp->data = a;
+		create_tree(temp->lchild);
+		create_tree(temp->rchild);
+	}
+}
+int count_leaves(node*& temp) {
+	if (temp) {
+		int l = count_leaves(temp->lchild); int r = count_leaves(temp->rchild);
+		if (l==0&&r==0) {
+			return 1;
+		}
+		else {
+			return l + r;
+		}
+	}
+	else {
+		return 0;
+	}
+}
+bool judge(node*& t1, node*& t2) {
+	static bool flag = 1;
+	if (t1 && t2) {
+		if (t1->data == t2->data) {
+			judge(t1->lchild, t2->lchild) && judge(t1->rchild, t2->rchild);
+		}
+		else { flag = 0; }
+	}
+	else if (!t1 && !t2) {
+	}
+	else { flag = 0; }
+
+	return flag;
+}
+void exchange(node*& temp) {
+	if (temp) {
+		node* t = temp->lchild;
+		temp->lchild = temp->rchild;
+		temp->rchild = t;
+		exchange(temp->lchild);
+		exchange(temp->rchild);
+	}
+}
+void double_preorder(node*& temp) {
+	if (temp) {
+		cout << temp->data;
+		double_preorder(temp->lchild);
+		double_preorder(temp->rchild);
+		cout << temp->data;
+	}
+}
+
+int max_width(node*& temp) {
+	queue<node*> q1;
+	int max = 0;
+	if (temp) {
+		
+		q1.push(temp);
+		max = 1;
+		node* curr = temp;
+		node* next = NULL;
+		int width = 0;
+		while (!q1.empty()) {
+			
+			temp = q1.front();
+			q1.pop();
+			
+			if (temp->lchild)q1.push(temp->lchild); next = temp->lchild;
+			if (temp->rchild)q1.push(temp->rchild);  next = temp->rchild;
+			width++;
+			if (temp == curr) {
+				max = max > width ? max : width;
+				width = 0;
+				curr = next;
+			}
+		}
+	}
+	return max;
+
+}
+int count_node1(node*& temp) {
+	queue<node*> q1;
+	int node1 = 0;
+	if (temp) {
+		q1.push(temp);
+		while (!q1.empty()) {
+			temp = q1.front();
+			q1.pop();
+			
+			if (temp->lchild)q1.push(temp->lchild);
+			if (temp->rchild)q1.push(temp->rchild);
+			if (temp->lchild || temp->rchild) {
+				if (temp->lchild != NULL && temp->rchild != NULL) {}
+				else node1++;
+			}
+		}
+	}
+	return node1;
+	
+}
+vector<vector<node*>>v1; vector<node*> v2;
+void ceng_arr(node*& temp) {
+	queue<node*> q1;
+	
+	if (temp) {
+		
+		q1.push(temp);
+		
+		
+		node* curr = temp;
+		node* next = NULL;
+		
+		while (!q1.empty()) {
+
+			temp = q1.front();
+			q1.pop();
+
+			if (temp->lchild) { q1.push(temp->lchild); next = temp->lchild; }
+			if (temp->rchild) { q1.push(temp->rchild);  next = temp->rchild; }
+			if (temp != curr) {
+				v2.push_back(temp);
+				
+			}
+			
+			if (temp == curr) {
+				v2.push_back(temp);	
+				
+				v1.push_back(v2);
+				v2.clear();
+				curr = next;
+				
+			}
+		}
+	}
+	
+	
+}
+void find_longroad() {
+	auto temp = v1[v1.size() - 1][0];
+	v2.push_back(temp);
+	node* father = NULL;
+	int index = v1.size() - 1;
+	while (father != v1[0][0]) {
+		index--;
+		for (auto i = 0; i != v1[index].size(); i++) {
+			father = v1[index][i];
+			if (father->lchild == temp || father->rchild == temp) { v2.push_back(father); temp = father; break; }
+		}
+		
+	}
+	
+}
+
+
+int main() {
+	BinTree t1;
+	create_tree(t1.return_top());
+	
+	ceng_arr(t1.return_top());
+	find_longroad();
+	for (auto i = v2.begin(); i != v2.end(); i++) {
+		cout << (*i)->data;
+	}
+	
+}
